@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { estimateMonthlyTotal, rankTowns } = require('../wizard.js');
+const { estimateMonthlyTotal, rankTowns, buildResultSummary } = require('../wizard.js');
 
 const basePreferences = {
   budget: 4500,
@@ -39,4 +39,33 @@ test('ranks an in-budget town ahead of an otherwise identical over-budget town',
   const ranked = rankTowns(towns, basePreferences);
 
   assert.equal(ranked[0].name, 'Within budget');
+});
+
+test('returns exactly three top recommendations with Hebrew reasons', () => {
+  const towns = ['Hebrew', 'Second', 'Third', 'Fourth'].map((name, index) => ({
+    name,
+    rentMin: 3000,
+    rentMax: 3000,
+    cars: 1,
+    community: 4 - index,
+    space: 2,
+    schools: 2,
+    transit: 2,
+    commute: 2,
+  }));
+
+  const summary = buildResultSummary(towns, { ...basePreferences, community: 2 });
+
+  assert.equal(summary.top.length, 3);
+  assert.match(summary.top[0].reasons.join(' '), /קהילה/);
+});
+
+test('warns when no town is within the total monthly budget', () => {
+  const towns = [
+    { name: 'Too expensive', rentMin: 5000, rentMax: 5000, cars: 1, community: 2, space: 2, schools: 2, transit: 2, commute: 2 },
+  ];
+
+  const summary = buildResultSummary(towns, { ...basePreferences, budget: 3000 });
+
+  assert.equal(summary.budgetWarning, true);
 });
