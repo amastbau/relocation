@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { estimateMonthlyTotal, rankTowns, buildResultSummary } = require('../wizard.js');
+const { estimateMonthlyTotal, rankTowns, buildResultSummary, calculateRemainingIncome } = require('../wizard.js');
 
 const basePreferences = {
   budget: 4500,
@@ -68,4 +68,13 @@ test('warns when no town is within the total monthly budget', () => {
   const summary = buildResultSummary(towns, { ...basePreferences, budget: 3000 });
 
   assert.equal(summary.budgetWarning, true);
+});
+
+test('shows remaining income after location cost and full family baseline', () => {
+  const remaining = calculateRemainingIncome(10200, 4350, 3445);
+
+  assert.deepEqual(remaining, {
+    afterLocation: 5850,
+    afterBaseline: 2405,
+  });
 });
