@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { estimateMonthlyTotal, rankTowns, buildResultSummary, calculateRemainingIncome } = require('../wizard.js');
+const { estimateMonthlyTotal, rankTowns, buildResultSummary, calculateRemainingIncome, meetsFortyTimesRule } = require('../wizard.js');
 
 const basePreferences = {
   budget: 4500,
@@ -77,4 +77,9 @@ test('shows remaining income after location cost and full family baseline', () =
     afterLocation: 5850,
     afterBaseline: 2405,
   });
+});
+
+test('checks whether gross annual income meets the 40-times-rent rule', () => {
+  assert.equal(meetsFortyTimesRule(144000, 3600), true);
+  assert.equal(meetsFortyTimesRule(143999, 3600), false);
 });

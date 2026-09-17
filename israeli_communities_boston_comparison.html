@@ -246,6 +246,7 @@
       <p class="subtitle">בחרו מה חשוב לכם. ההמלצות משקללות שכירות ממוצעת ועלות רכב חודשית, ומציגות את הפשרות בכל בחירה.</p>
       <div class="wizard-grid" id="wizard-form">
         <label>הכנסה נטו חודשית ($)<input id="net-income" type="number" min="0" step="100" value="10200"></label>
+        <label>הכנסה שנתית ברוטו למשק הבית ($)<input id="gross-annual-income" type="number" min="0" step="1000" placeholder="לפי מכתב ההעסקה"></label>
         <label>תקציב חודשי כולל ($, שכירות + תחבורה)<input id="budget" type="number" min="0" step="100" placeholder="לדוגמה: 4500"></label>
         <label>עלות חודשית לרכב ($)<input id="car-cost" type="number" min="0" step="50" value="700"></label>
         <label>קהילה ישראלית / דוברת עברית<select data-preference="community"><option value="0">לא חשוב</option><option value="1">חשוב במידה מסוימת</option><option value="2">חשוב מאוד</option></select></label>
@@ -254,6 +255,7 @@
         <label>תחבורה ציבורית<select data-preference="transit"><option value="0">לא חשוב</option><option value="1">חשוב במידה מסוימת</option><option value="2">חשוב מאוד</option></select></label>
         <label>נסיעה קצרה לבוסטון<select data-preference="commute"><option value="0">לא חשוב</option><option value="1">חשוב במידה מסוימת</option><option value="2">חשוב מאוד</option></select></label>
       </div>
+      <p class="notes">כלל 40× הוא כלל סינון נפוץ אצל בעלי דירות, לא התחייבות לאישור. הזינו את הברוטו ממכתב ההעסקה.</p>
       <div id="budget-warning" class="budget-warning" hidden></div>
       <div id="top-results" class="card-grid" aria-live="polite"></div>
     </section>

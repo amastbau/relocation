@@ -24,6 +24,10 @@
     };
   }
 
+  function meetsFortyTimesRule(grossAnnualIncome, monthlyRent) {
+    return grossAnnualIncome >= monthlyRent * 40;
+  }
+
   function scoreTown(town, preferences) {
     const total = estimateMonthlyTotal(town, preferences.carCost);
     const preferenceScore = preferenceKeys.reduce(
@@ -81,6 +85,7 @@
     function preferenceValue() {
       const values = {
         netIncome: Number(document.querySelector('#net-income').value) || 0,
+        grossAnnualIncome: Number(document.querySelector('#gross-annual-income').value) || 0,
         budget: Number(document.querySelector('#budget').value) || 0,
         carCost: Number(document.querySelector('#car-cost').value) || 0,
       };
@@ -96,7 +101,14 @@
         const tradeoff = town.cars > 1 ? 'הפשרה: לרוב נדרשים שני רכבים.' : 'יתרון: אפשר להסתדר עם רכב אחד.';
         const remaining = calculateRemainingIncome(preferences.netIncome, town.total, 3445);
         const incomeLines = preferences.netIncome ? `<p>נשאר אחרי שכירות ורכב: $${Math.round(remaining.afterLocation).toLocaleString()}</p><p>חיסכון אפשרי אחרי שירותים והוצאות משפחה: $${Math.round(remaining.afterBaseline).toLocaleString()}</p>` : '';
-        return `<article class="summary-box result-card"><h3>${town.name}</h3><p class="total">שכירות ורכב: $${Math.round(town.total).toLocaleString()}</p>${incomeLines}<p>מתאים בזכות: ${positives}</p><p>${tradeoff}</p></article>`;
+        const averageRent = (town.rentMin + town.rentMax) / 2;
+        const requiredGross = averageRent * 40;
+        const fortyTimes = preferences.grossAnnualIncome
+          ? meetsFortyTimesRule(preferences.grossAnnualIncome, averageRent)
+            ? 'עומדים בכלל 40×'
+            : 'לא עומדים בכלל 40×'
+          : `נדרש ברוטו שנתי של כ־$${Math.round(requiredGross).toLocaleString()} לפי כלל 40×`;
+        return `<article class="summary-box result-card"><h3>${town.name}</h3><p class="total">שכירות ורכב: $${Math.round(town.total).toLocaleString()}</p>${incomeLines}<p>${fortyTimes}</p><p>מתאים בזכות: ${positives}</p><p>${tradeoff}</p></article>`;
       }).join('');
       warning.hidden = !summary.budgetWarning;
       warning.textContent = summary.budgetWarning ? 'אין התאמה מלאה לתקציב הכולל שבחרתם. אלה האפשרויות הקרובות ביותר; בדקו את הפשרה בין שכר הדירה למספר הרכבים.' : '';
@@ -113,5 +125,5 @@
 
   if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', renderWizard);
 
-  return { estimateMonthlyTotal, calculateRemainingIncome, scoreTown, rankTowns, buildResultSummary };
+  return { estimateMonthlyTotal, calculateRemainingIncome, meetsFortyTimesRule, scoreTown, rankTowns, buildResultSummary };
 });
